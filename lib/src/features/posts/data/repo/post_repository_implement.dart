@@ -3,6 +3,7 @@ import 'package:get_example/src/config/data_state.dart';
 import 'package:get_example/src/features/posts/data/data_src/remote/post_api.dart';
 import 'package:get_example/src/features/posts/data/models/comment_model.dart';
 import 'package:get_example/src/features/posts/data/models/post_model.dart';
+import 'package:get_example/src/features/posts/domain/entities/post_entity.dart';
 import 'package:get_example/src/features/posts/domain/repo/post_repository.dart';
 
 class PostRepositoryImplement implements PostRepository {
@@ -10,9 +11,9 @@ class PostRepositoryImplement implements PostRepository {
 
   PostRepositoryImplement(this.postApi);
   @override
-  Future<DataState<List<PostModel>>> getPosts() async {
+  Future<DataState<List<PostModel>>> getPosts(int page) async {
     try {
-      final res = await postApi.getPosts();
+      final res = await postApi.getPosts(page);
       if (res.statusCode == 200) {
         return DataSuccess(
           res.data.map<PostModel>((e) => PostModel.fromJson(e)).toList(),
@@ -39,6 +40,29 @@ class PostRepositoryImplement implements PostRepository {
       if (res.statusCode == 200) {
         return DataSuccess(
           res.data.map<CommentModel>((e) => CommentModel.fromJson(e)).toList(),
+        );
+      } else {
+        return DataError(
+          DioException(
+            requestOptions: res.requestOptions,
+            response: res,
+            error: res.data.toString(),
+            type: DioExceptionType.badResponse,
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      return DataError(e);
+    }
+  }
+
+  @override
+  Future<DataState<List<PostEntity>>> searchForPost(String query) async {
+    try {
+      final res = await postApi.searchForPost(query);
+      if (res.statusCode == 200) {
+        return DataSuccess(
+          res.data.map<PostEntity>((e) => PostModel.fromJson(e)).toList(),
         );
       } else {
         return DataError(

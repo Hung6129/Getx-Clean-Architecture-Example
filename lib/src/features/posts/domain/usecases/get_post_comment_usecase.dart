@@ -4,7 +4,7 @@ import 'package:get_example/src/features/posts/domain/entities/comment_entity.da
 import 'package:get_example/src/config/use_case.dart';
 
 class GetPostCommentUsecase
-    implements UseCase<DataState<List<CommentEntity>>, int> {
+    implements UseCaseWithParams<DataState<List<CommentEntity>>, int> {
   final PostRepositoryImplement postRepositoryImplement;
 
   GetPostCommentUsecase(this.postRepositoryImplement);

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:get_example/src/features/posts/data/models/comment_model.dart';
 
 class CommentEntity extends Equatable {
   final int postId;
@@ -14,6 +15,14 @@ class CommentEntity extends Equatable {
     required this.email,
     required this.body,
   });
+
+  toCommentModel() => CommentModel(
+        postId: postId,
+        id: id,
+        name: name,
+        email: email,
+        body: body,
+      );
 
   @override
   List<Object?> get props => [postId, id, name, email, body];
